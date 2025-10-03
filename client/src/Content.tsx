@@ -1,3 +1,4 @@
+import { Button } from "./Button"
 import Card from "./Card"
 
 function Content() {
@@ -10,10 +11,12 @@ function Content() {
           <img className="md:w-5 w-6" src="./share.png" alt="" />
           <p className="text-blue-600 hidden md:block">Share Brain</p>
         </div>
-        <div className="flex items-center gap-2 p-2 bg-blue-600 rounded-lg cursor-pointer">
+        {/* <div className="flex items-center gap-2 p-2 bg-blue-600 rounded-lg cursor-pointer">
             <span className="text-white">+</span>
             <p className="text-white">Add Content</p>
-        </div>
+        </div> */}
+        {/* created own btn  */}
+        <Button variant="secondary" size="sm" text={"+ Add content"} onClick={()=>console.log("hello")}/>
       </div>
      </div>
      <div className="mt-12 card grid grid-cols-4  gap-10">
