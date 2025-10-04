@@ -9,6 +9,7 @@ function Sidebar() {
         </div>
          <div className="flex flex-col justify-center gap-7">
             <div className="flex items-center hover:bg-gray-300 p-1 rounded-md cursor-pointer font-semibold gap-5">
+              
                 <img className="w-6" src="../x.png" alt="" />
                 <p className="hidden md:block">Tweets</p>
             </div>

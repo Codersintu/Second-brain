@@ -1,15 +1,22 @@
 
+import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import Sidebar from './Sidebar'
-import Content from "./Content"
+import Home from './Home/Home'
+import Content from './Content'
+import Signup from './Signup'
+import { RecoilRoot } from 'recoil'
+
 function App() {
  
-
   return (
-    <div className="flex">
-      <Sidebar/>
-      <Content/>
-    </div>
+    <RecoilRoot>
+    <Routes>
+    <Route element={<Home/>}>
+      <Route path='/' element={<Content/>}/>
+    </Route>
+    <Route path='/auth' element={<Signup/>}/>
+  </Routes>
+    </RecoilRoot>
   )
 }
 
