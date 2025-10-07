@@ -21,20 +21,15 @@ export const registerAtom=atom({
     default:false
 })
 
-interface User {
-  username: string;
-  email: string;
-  password: string;
+interface ContentItem {
   _id: string;
-  __v: number;
+  link: string;
+  type: string;
+  title: string;
+  tags: string[];
 }
 
-interface ApiResponse {
-  message: string;
-  user: User;
-}
-
-export const dataInfoAtom = atom<ApiResponse | null>({
-  key: "dataInfoAtom",
-  default: null,
-});
+export const contentAtom=atom<ContentItem[]>({
+    key:"contentitem",
+    default:[]
+})

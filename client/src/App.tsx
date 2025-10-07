@@ -1,12 +1,22 @@
 
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import './App.css'
 import Home from './Home/Home'
 import Content from './Content'
 import Signup from './Signup'
 import { RecoilRoot } from 'recoil'
+import { useEffect } from 'react'
 
 function App() {
+  const navigate=useNavigate()
+  useEffect(()=>{
+    const token=localStorage.getItem("token")
+    if (token) {
+      navigate("/")
+    }else{
+      navigate("/auth")
+    }
+  },[])
  
   return (
     <RecoilRoot>

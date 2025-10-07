@@ -1,8 +1,9 @@
 import { useRef} from 'react'
 import axios from 'axios';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { dataInfoAtom, emailAtom, passwordAtom, registerAtom, usernameAtom } from './Atom';
+import {emailAtom, passwordAtom, registerAtom, usernameAtom } from './Atom';
 import { useNavigate } from 'react-router-dom';
+import { BACKEND_URL } from './Config';
 
 
 function Signup() {
@@ -17,7 +18,6 @@ function Signup() {
   const username=useRecoilValue(usernameAtom)
   const email=useRecoilValue(emailAtom)
   const password=useRecoilValue(passwordAtom)
-  const setData=useSetRecoilState(dataInfoAtom)
   const navigate=useNavigate()
 
  async function signup(event: React.MouseEvent<HTMLButtonElement>) {
@@ -30,13 +30,12 @@ function Signup() {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/register", {
+      const response = await axios.post(`${BACKEND_URL}/api/v1/register`, {
         username,
         email,
         password,
       });
       console.log("Signup successful:", response.data);
-      setData(response.data)
        setIsRegistered(true)
       alert("Account created successfully!");
     } catch (error: any) {
@@ -57,7 +56,7 @@ function Signup() {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/login", {
+      const response = await axios.post(`${BACKEND_URL}/api/v1/login`, {
         email,
         password,
       });
@@ -67,8 +66,8 @@ function Signup() {
       if (token) {
         localStorage.setItem("token", token); // store token
         alert("Account login successfully!");
-        navigate("/")
       }
+      navigate("/")
 
     } catch (error: any) {
       console.error("Signin error:", error.response?.data || error.message);
