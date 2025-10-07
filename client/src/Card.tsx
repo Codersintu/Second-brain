@@ -1,13 +1,38 @@
+import axios from "axios";
+import { BACKEND_URL } from "./Config";
 import DeleteIcon from "./DeleteIcon"
 import ShareIcon from "./ShareIcon"
+import { useSetRecoilState } from "recoil";
+import { contentAtom } from "./Atom";
 
 type Cardprops={
   link:string,
   title:string,
-  type:string
+  type:string,
+  date:string,
+  contentId:string
 }
-function Card({ link, title, type }: Cardprops) {
-  const date=new Date()
+function Card({ link, title, type,date,contentId }: Cardprops) {
+  console.log("key",contentId)
+  const setContent=useSetRecoilState(contentAtom)
+
+  const handleDelete = async (contentId: string) => {
+  try {
+    await axios.delete(`${BACKEND_URL}/api/v1/content`, {
+      headers: {
+        Authorization: localStorage.getItem("token"),
+      },
+      data: { contentId }
+    });
+
+    setContent((prev) => prev.filter((item) => item._id !== contentId));
+    alert("Deleted successfully");
+  } catch (error) {
+    console.error("Delete failed", error);
+    alert("Failed to delete content");
+  }
+};
+
   return (
      <div className="w-72 bg-white shadow-md rounded-xl border p-4 min-h-64">
       <div className="p-0 flex flex-col gap-10">
@@ -22,7 +47,8 @@ function Card({ link, title, type }: Cardprops) {
           </div>
           <div className="flex items-center gap-3 ">
             <a href={link} target="_blank"><ShareIcon/></a>
-            <DeleteIcon/>
+            <div className="" onClick={() => handleDelete(contentId)}><DeleteIcon/></div>
+                       
           </div>
         </div>
 
@@ -47,7 +73,7 @@ function Card({ link, title, type }: Cardprops) {
         </div>
 
         {/* Footer */}
-        <p className="text-xs text-gray-400">Added on {date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}</p>
+        <p className="text-xs text-gray-400">Added on {date}</p>
       </div>
     </div>
   )

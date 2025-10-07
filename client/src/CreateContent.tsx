@@ -1,6 +1,6 @@
 import { useSetRecoilState } from "recoil"
 import CrossIcon from "./CrossIcon"
-import { showAtom } from "./Atom"
+import {  refreshAtom, showAtom } from "./Atom"
 import { useRef } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "./Config";
@@ -11,6 +11,7 @@ export default function CreateContent() {
   const titleRef = useRef<HTMLInputElement>(null);
   const linkref = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLSelectElement>(null);
+  const setRefresh=useSetRecoilState(refreshAtom)
   async function Createcontent(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     const title=titleRef.current?.value
@@ -23,8 +24,7 @@ export default function CreateContent() {
     headers: {
     Authorization: `${token}`,
     }})
-    console.log("content create successfully",response.data)
-  
+    setRefresh(response.data)
     setshow(false)
     alert("content create successfully")
     } catch (error) {

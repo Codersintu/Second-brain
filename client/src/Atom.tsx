@@ -27,9 +27,15 @@ interface ContentItem {
   type: string;
   title: string;
   tags: string[];
+createdAt: string;
 }
 
 export const contentAtom=atom<ContentItem[]>({
     key:"contentitem",
     default:[]
+})
+
+export const refreshAtom=atom({
+    key:"refresh",
+    default:""
 })
