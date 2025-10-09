@@ -9,7 +9,7 @@ import { showAtom } from "./Atom"
 
 function Content() {
 const setshow=useSetRecoilState(showAtom)
-const {shareBtn}=useFetch(`${BACKEND_URL}/api/v1/brain/share`)
+const {hashed,shareBtn}=useFetch(`${BACKEND_URL}/api/v1/brain/share`)
 
   return (
     <>
@@ -17,10 +17,10 @@ const {shareBtn}=useFetch(`${BACKEND_URL}/api/v1/brain/share`)
      <div className="flex justify-between items-center">
       <h1 className="md:text-2xl text-xl font-semibold">All Notes</h1>
       <div className="flex gap-5 items-center">
-        <div className="flex items-center gap-2 bg-cyan-100 rounded-lg md:p-2 p-1 cursor-pointer" onClick={shareBtn}>
+        <a href={hashed} className="flex items-center gap-2 bg-cyan-100 rounded-lg md:p-2 p-1 cursor-pointer" onClick={shareBtn}>
           <ShareIcon/>
           <p className="text-blue-600 hidden md:block">Share Brain</p>
-        </div>
+        </a>
         {/* created own btn  */}
         <button className="bg-blue-600 p-2 rounded-md text-white font-serif " onClick={()=>setshow(true)}>+ Add Content</button>
         

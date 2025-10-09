@@ -23,6 +23,11 @@ export const registerAtom=atom({
     default:false
 })
 
+export const filterAtom=atom({
+  key:"filteratom",
+  default:""
+})
+
 export interface ContentItem {
   _id: string;
   link: string;

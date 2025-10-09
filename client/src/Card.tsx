@@ -3,11 +3,13 @@ import { BACKEND_URL } from "./Config";
 import DeleteIcon from "./DeleteIcon"
 import ShareIcon from "./ShareIcon"
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { contentAtom, type ContentItem } from "./Atom";
+import { contentAtom, filterAtom, type ContentItem } from "./Atom";
+import { useEffect } from "react";
 
 function Card() {
   const content=useRecoilValue(contentAtom)
   const setContent=useSetRecoilState(contentAtom)
+  const FilterContent=useRecoilValue(filterAtom)
 
   const handleDelete = async (contentId: string) => {
   try {
@@ -24,10 +26,16 @@ function Card() {
     alert("Failed to delete content");
   }
 };
+useEffect(() => {
+  console.log("filter atom value:", JSON.stringify(FilterContent));
+  console.log("content types:", content.map(c => c.type));
+}, [FilterContent, content]);
 
   return (
     <>
-    {content.map((item:ContentItem)=>(
+    {content
+         .filter((item)=>!FilterContent || item.type === FilterContent)
+         .map((item:ContentItem)=>(
      <div key={item._id} className="w-72 bg-white shadow-md rounded-xl border p-4 min-h-64">
       <div className="p-0 flex flex-col gap-10">
         {/* Header */}
@@ -47,9 +55,24 @@ function Card() {
         </div>
 
         {/* Content */}
-        {item.type==="Youtube" && 
-        <iframe className="w-64 min-h-[150px]" src={item.link.replace("watch","embed")} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen>
-        </iframe>}
+        {item.type === "Youtube" && (() => {
+  let videoId = "";
+  const match = item.link.match(/(?:v=|youtu\.be\/)([^&]+)/);
+  if (match) videoId = match[1];
+  const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+  return (
+    <iframe
+      className="w-64 min-h-[150px]"
+      src={embedUrl}
+      title="YouTube video player"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerPolicy="strict-origin-when-cross-origin"
+      allowFullScreen
+    />
+  );
+})()}
+
 
         {item.type==="Twitter" &&
          <blockquote className="twitter-tweet">
@@ -70,7 +93,7 @@ function Card() {
         <p className="text-xs text-gray-400">Added on {new Date(item.createdAt).toLocaleDateString()}</p>
       </div>
     </div>
-    
+        
      ))}
      </>
   )
