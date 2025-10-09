@@ -1,4 +1,6 @@
-import { atom } from "recoil";
+import axios from "axios";
+import { atom, selector } from "recoil";
+import { BACKEND_URL } from "./Config";
 
 export const showAtom=atom({
     key:"showItem",
@@ -21,21 +23,33 @@ export const registerAtom=atom({
     default:false
 })
 
-interface ContentItem {
+export interface ContentItem {
   _id: string;
   link: string;
   type: string;
   title: string;
   tags: string[];
 createdAt: string;
+contentId:string
 }
 
-export const contentAtom=atom<ContentItem[]>({
-    key:"contentitem",
-    default:[]
-})
-
-export const refreshAtom=atom({
-    key:"refresh",
-    default:""
-})
+export const contentAtom = atom<ContentItem[]>({
+  key: "contentAtom",
+  default: selector<ContentItem[]>({
+    key: "contentAtomSelector",
+    get: async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/api/v1/content`, {
+          headers: {
+            Authorization: localStorage.getItem("token") || "",
+          },
+        });
+        console.log("get request",res.data);
+        return res.data.contentall as ContentItem[];
+      } catch (error) {
+        console.error("Error fetching content:", error);
+        return [];
+      }
+    },
+  }),
+});

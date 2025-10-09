@@ -1,7 +1,7 @@
 import { useSetRecoilState } from "recoil"
 import CrossIcon from "./CrossIcon"
-import {  refreshAtom, showAtom } from "./Atom"
-import { useRef } from "react";
+import {  contentAtom,showAtom, type ContentItem } from "./Atom"
+import { useRef} from "react";
 import axios from "axios";
 import { BACKEND_URL } from "./Config";
 
@@ -11,7 +11,8 @@ export default function CreateContent() {
   const titleRef = useRef<HTMLInputElement>(null);
   const linkref = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLSelectElement>(null);
-  const setRefresh=useSetRecoilState(refreshAtom)
+  const setContent=useSetRecoilState(contentAtom)
+
   async function Createcontent(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     const title=titleRef.current?.value
@@ -19,20 +20,19 @@ export default function CreateContent() {
     const type=selectRef.current?.value
     
    try {
-    const token=localStorage.getItem("token")
    const response=await axios.post(`${BACKEND_URL}/api/v1/content`,{title,type,link},{
     headers: {
-    Authorization: `${token}`,
+    Authorization: localStorage.getItem("token"),
     }})
-    setRefresh(response.data)
+   setContent((old: ContentItem[]) => [...old, response.data as ContentItem]);
     setshow(false)
     alert("content create successfully")
     } catch (error) {
-    console.log("content create failed",error)
     alert("content create Failed")
    }
 
   }
+
   return (
     <div className="w-full h-screen flex justify-center items-center absolute z-20 bg-black/30 ">
       <div className=" w-full max-w-xl bg-white rounded-lg shadow-sm p-5">
