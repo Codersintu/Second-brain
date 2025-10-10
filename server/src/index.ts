@@ -14,9 +14,8 @@ app.use(express.json())
 async function main() {
   try {
     await mongoose.connect(process.env.MONGO_URL ?? "mongodb+srv://codewithbihari:codebihari9199@cluster0.vrkl8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-    console.log("connected")
   } catch (error) {
-    console.log(error)
+    return error;
   }
 }
 main()
@@ -27,6 +26,3 @@ app.get("/", (req, res) => {
   res.send("✅ Server is running successfully!");
 });
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000")
-})

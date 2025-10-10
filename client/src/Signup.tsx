@@ -35,11 +35,9 @@ function Signup() {
         email,
         password,
       });
-      console.log("Signup successful:", response.data);
        setIsRegistered(true)
       alert("Account created successfully!");
     } catch (error: any) {
-      console.error("Signup error:", error.response?.data || error.message);
       alert(error.response?.data?.message || "Signup failed");
     }
   }
@@ -61,7 +59,6 @@ function Signup() {
         password,
       });
 
-      console.log("Login successful:", response.data);
       const token = response.data.token;
       if (token) {
         localStorage.setItem("token", token); // store token
@@ -70,7 +67,6 @@ function Signup() {
       navigate("/")
 
     } catch (error: any) {
-      console.error("Signin error:", error.response?.data || error.message);
       alert(error.response?.data?.message || "Signin failed");
     }
   }
