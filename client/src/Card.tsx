@@ -4,7 +4,6 @@ import DeleteIcon from "./DeleteIcon"
 import ShareIcon from "./ShareIcon"
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { contentAtom, filterAtom, type ContentItem } from "./Atom";
-import { useEffect } from "react";
 
 function Card() {
   const content=useRecoilValue(contentAtom)
@@ -26,11 +25,6 @@ function Card() {
     alert("Failed to delete content");
   }
 };
-useEffect(() => {
-  console.log("filter atom value:", JSON.stringify(FilterContent));
-  console.log("content types:", content.map(c => c.type));
-}, [FilterContent, content]);
-
   return (
     <>
     {content

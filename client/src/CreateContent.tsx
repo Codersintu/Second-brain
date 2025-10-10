@@ -4,8 +4,7 @@ import {  contentAtom,showAtom, type ContentItem } from "./Atom"
 import { useRef} from "react";
 import axios from "axios";
 import { BACKEND_URL } from "./Config";
-
-
+import {motion} from "motion/react"
 export default function CreateContent() {
   const setshow=useSetRecoilState(showAtom)
   const titleRef = useRef<HTMLInputElement>(null);
@@ -18,6 +17,9 @@ export default function CreateContent() {
     const title=titleRef.current?.value
     const link=linkref.current?.value
     const type=selectRef.current?.value
+    if (!title || !link || !type) {
+      alert("plese fill all creadentials!")
+    }
     
    try {
    const response=await axios.post(`${BACKEND_URL}/api/v1/content`,{title,type,link},{
@@ -34,8 +36,9 @@ export default function CreateContent() {
   }
 
   return (
+    
     <div className="w-full h-screen flex justify-center items-center absolute z-20 bg-black/30 ">
-      <div className=" w-full max-w-xl bg-white rounded-lg shadow-sm p-5">
+      <motion.div initial={{y:100,opacity:0}} animate={{y:0,opacity:1}} transition={{duration:0.5,ease:"easeInOut"}} className=" w-full max-w-xl bg-white rounded-lg shadow-sm p-5">
           {/* Title */}
           <div className="float-right cursor-pointer hover:bg-cyan-200 p-1 rounded-full" onClick={()=>setshow(false)}><CrossIcon /></div>
           
@@ -69,8 +72,8 @@ export default function CreateContent() {
             </select>
           </div>
 
-          <button onClick={Createcontent} className="w-full items-center bg-blue-600 py-2 text-white rounded-md">Submit</button>
-          </div>
+          <button onClick={Createcontent} className="w-full items-center bg-blue-600 py-2 text-white rounded-md hover:bg-blue-500">Submit</button>
+          </motion.div>
     </div>
   )
 }
