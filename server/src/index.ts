@@ -6,7 +6,7 @@ import dotenv from "dotenv"
 dotenv.config()
 const app = express()
 app.use(cors({
-    origin:['https://second-brain-smoky-beta.vercel.app'],
+    origin:['https://second-brain-j5vd.vercel.app'],
     methods:'GET,PUT,POST,DELETE',
     credentials:true
 }))
