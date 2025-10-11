@@ -11,7 +11,8 @@ const router = express.Router();
 
 router.post("/login", async (req, res) => {
     const {email, password} = req.body;
-    const user = await User.findOne({email: email, password: password});
+    try {
+        const user = await User.findOne({email: email, password: password});
     if(user){
         const token = jwt.sign({
             id: user._id
@@ -20,15 +21,16 @@ router.post("/login", async (req, res) => {
             message: "Login successful",
             token: token
         });
-    }else{
-        res.status(400).json({
-            message: "Invalid credentials"
-        });
     }
+    } catch (error) {
+        res.status(500).json(error);
+    }
+    
 });
 router.post("/register", async(req, res) => {
  const {username,password,email}=req.body;
- const user=await User.create({
+ try {
+    const user=await User.create({
     username:username,
     password:password,
     email:email
@@ -38,15 +40,17 @@ router.post("/register", async(req, res) => {
         message:"User registered successfully",
         user:user
     })
- }else{
-    res.status(400).json({
-        message:"User registration failed"
-    })
  }
+ } catch (error) {
+    res.status(500).json(error)
+ }
+ 
 });
+
 router.post("/content",userMiddleware, async(req, res) => {
     const {link,type,title}=req.body;
-    const content=await Content.create({
+    try {
+         const content=await Content.create({
         link,
         type,
         title,
@@ -55,32 +59,43 @@ router.post("/content",userMiddleware, async(req, res) => {
     })
     if(content){
        res.status(200).json({content})
-    }else{
-        return res.json(
-            "failed creation"
-        )
     }
+    } catch (error) {
+        res.status(500).json(error)
+    }
+   
 
 })
 router.get("/content",userMiddleware, async(req, res) => {
     const userId=req.userId;
-   const contentall=await Content.find({userId:userId}).populate("userId","username email")
+    try {
+        const contentall=await Content.find({userId:userId}).populate("userId","username email")
    res.json({contentall})
+    } catch (error) {
+        res.status(500).json(error)
+    }
+   
 });
 
 router.delete("/content",userMiddleware, async(req, res) => {
     const contentId=req.body.contentId;
-    const deletes=await Content.deleteMany({
+    try {
+        const deletes=await Content.deleteMany({
         _id:contentId,
         userId:req.userId
     })
     if (deletes) {
         res.status(200).json({ message: "Content deleted successfully" });
     }
+    } catch (error) {
+        res.status(500).json(error)
+    }
+    
 });
 router.post("/brain/share",userMiddleware,async (req, res) => {
     const {share}=req.body;
-    if(share){
+    try {
+        if(share){
        const Hash=await Link.create({
         userId:req.userId,
         hash:random(10)
@@ -89,6 +104,10 @@ router.post("/brain/share",userMiddleware,async (req, res) => {
     }else{
        await Link.deleteOne({userId:req.userId})
     }
+    } catch (error) {
+        res.status(500).json(error)
+    }
+    
     
 });
 
