@@ -1,1 +1,1 @@
-export const BACKEND_URL="https://second-brain-smoky-beta.vercel.app"
+export const BACKEND_URL="https://server-7nl8.vercel.app"
