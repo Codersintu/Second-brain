@@ -35,6 +35,7 @@ function Signup() {
         email,
         password,
       });
+      console.log(response);
        setIsRegistered(true)
       alert("Account created successfully!");
     } catch (error: any) {
