@@ -43,6 +43,8 @@ export const contentAtom = atom<ContentItem[]>({
   default: selector<ContentItem[]>({
     key: "contentAtomSelector",
     get: async () => {
+      const token = localStorage.getItem("token");
+     if (!token) return []; // skip call if no token
       try {
         const res = await axios.get(`${BACKEND_URL}/api/v1/content`, {
           headers: {
