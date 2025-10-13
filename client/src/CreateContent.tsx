@@ -33,7 +33,6 @@ export default function CreateContent() {
     return updated
    });
     setshow(false)
-    alert("content create successfully")
     } catch (error) {
     alert("content create Failed")
    }finally{

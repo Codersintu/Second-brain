@@ -39,7 +39,6 @@ function Signup() {
       });
       console.log(response);
        setIsRegistered(true)
-      alert("Account created successfully!");
     } catch (error: any) {
       alert(error.response?.data?.message || "Signup failed");
     }finally{
@@ -69,7 +68,6 @@ async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
       const token = response.data.token;
       if (token) {
         localStorage.setItem("token", token); // store token
-        alert("Account login successfully!");
       }
       navigate("/")
 
