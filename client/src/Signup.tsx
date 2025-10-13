@@ -18,7 +18,7 @@ function Signup() {
   const username=useRecoilValue(usernameAtom)
   const email=useRecoilValue(emailAtom)
   const password=useRecoilValue(passwordAtom)
-  const [loadable,setloadable]=useState(true)
+  const [loadable,setloadable]=useState(false)
   const navigate=useNavigate()
 
  async function signup(event: React.MouseEvent<HTMLButtonElement>) {
@@ -30,7 +30,7 @@ function Signup() {
       alert("Please fill all fields!");
       return;
     }
-    setloadable(false)
+    setloadable(true)
     try {
       const response = await axios.post(`${BACKEND_URL}/api/v1/register`, {
         username,
@@ -42,7 +42,7 @@ function Signup() {
     } catch (error: any) {
       alert(error.response?.data?.message || "Signup failed");
     }finally{
-      setloadable(true)
+      setloadable(false)
     }
   }
 
@@ -58,7 +58,7 @@ async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
       alert("Please fill all fields!");
       return;
     }
-     setloadable(false)
+     setloadable(true)
     try {
       const response = await axios.post(`${BACKEND_URL}/api/v1/login`, {
         email,
@@ -74,7 +74,7 @@ async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
     } catch (error: any) {
       alert(error.response?.data?.message || "Signin failed");
     }finally{
-      setloadable(true)
+      setloadable(false)
     }
   }
 
@@ -107,9 +107,9 @@ async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
               <button
               onClick={SigninHandler}
                 type="submit"
-                className="w-full bg-red-600 text-white p-2 rounded-lg hover:bg-red-700"
+                className={`w-full bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 ${loadable ? "opacity-50 cursor-not-allowed" : ""}`}
               >
-                {loadable ? "Login" : "Loading..."}
+                {loadable ? "Loading🏃‍♂️‍➡️..." : "Login"}
               </button>
             </form>
             <p className="text-center mt-4">
@@ -157,9 +157,10 @@ async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
               <button
               onClick={signup}
                 type="submit"
-                className="w-full bg-red-600 text-white p-2 rounded-lg hover:bg-red-700"
+                disabled={loadable}
+                className={`w-full bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 ${loadable ? "opacity-50 cursor-not-allowed" : ""}`}
               >
-                {loadable ? "Register" : "Loading..."}
+                 {loadable ? "Loading🏃‍♂️‍➡️..." : "Sign Up"}
               </button>
             </form>
             <p className="text-center mt-4">

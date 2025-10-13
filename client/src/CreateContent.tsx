@@ -11,7 +11,7 @@ export default function CreateContent() {
   const linkref = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLSelectElement>(null);
   const setContent=useSetRecoilState(contentAtom)
-  const [loadable,setloadable]=useState(true)
+  const [loadable,setloadable]=useState(false)
 
   async function Createcontent(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -21,7 +21,7 @@ export default function CreateContent() {
     if (!title || !link || !type) {
       alert("plese fill all creadentials!")
     }
-    setloadable(false)
+    setloadable(true)
    try {
    const response=await axios.post(`${BACKEND_URL}/api/v1/content`,{title,type,link},{
     headers: {
@@ -36,7 +36,7 @@ export default function CreateContent() {
     } catch (error) {
     alert("content create Failed")
    }finally{
-    setloadable(true);
+    setloadable(false);
    }
 
   }
@@ -78,7 +78,7 @@ export default function CreateContent() {
             </select>
           </div>
 
-          <button onClick={Createcontent} className="w-full items-center bg-blue-600 py-2 text-white rounded-md hover:bg-blue-500">{loadable?"Submit":"Submit..."}</button>
+          <button onClick={Createcontent} className={`w-full items-center bg-blue-600 py-2 text-white rounded-md hover:bg-blue-500 ${loadable? "cursor-not-allowed opacity-50":""}`}> {loadable ? "Submit Content🏃‍♂️‍➡️..." : "Submit"}</button>
           </motion.div>
     </div>
   )
