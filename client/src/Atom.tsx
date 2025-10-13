@@ -45,21 +45,15 @@ export const contentAtom = atom<ContentItem[]>({
     get: async () => {
       const token = localStorage.getItem("token");
      if (!token) return []; // skip call if no token
-        // ✅ Try to load cached data first
-    const cached = localStorage.getItem("cachedContent");
-    if (cached) {
-      console.log("Using cached content");
-      return JSON.parse(cached) as ContentItem[];
-    }
+     
       try {
         const res = await axios.get(`${BACKEND_URL}/api/v1/content`, {
           headers: {
             Authorization: localStorage.getItem("token") || "",
           },
         });
-        const content = res.data.contentall as ContentItem[];
-       localStorage.setItem("cachedContent", JSON.stringify(content));
-        return content;
+        
+        return res.data.contentall as ContentItem[];
       } catch (error) {
         console.error("Error fetching content:", error);
         return [];

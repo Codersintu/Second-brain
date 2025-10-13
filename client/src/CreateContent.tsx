@@ -26,7 +26,11 @@ export default function CreateContent() {
     headers: {
     Authorization: localStorage.getItem("token"),
     }})
-   setContent((old: ContentItem[]) => [...old, response.data as ContentItem]);
+   setContent((old: ContentItem[]) =>{
+   const updated=[...old, response.data as ContentItem];
+    localStorage.setItem("cachedContent", JSON.stringify(updated));
+    return updated
+   });
     setshow(false)
     alert("content create successfully")
     } catch (error) {

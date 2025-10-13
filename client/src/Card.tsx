@@ -19,7 +19,11 @@ function Card() {
       data: { contentId }
     });
 
-    setContent((prev) => prev.filter((item) => item._id !== contentId));
+    setContent((prev) =>{
+      const updatedContent = prev.filter(item => item._id !== contentId);
+      localStorage.setItem("cachedContent", JSON.stringify(updatedContent));
+      return updatedContent;
+    });
   } catch (error) {
     console.error("Delete failed", error);
     alert("Failed to delete content");
