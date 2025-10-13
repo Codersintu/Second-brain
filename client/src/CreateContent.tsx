@@ -1,7 +1,7 @@
 import { useSetRecoilState } from "recoil"
 import CrossIcon from "./CrossIcon"
 import {  contentAtom,showAtom, type ContentItem } from "./Atom"
-import { useRef} from "react";
+import { useRef, useState} from "react";
 import axios from "axios";
 import { BACKEND_URL } from "./Config";
 import {motion} from "motion/react"
@@ -11,6 +11,7 @@ export default function CreateContent() {
   const linkref = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLSelectElement>(null);
   const setContent=useSetRecoilState(contentAtom)
+  const [loadable,setloadable]=useState(true)
 
   async function Createcontent(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -20,7 +21,7 @@ export default function CreateContent() {
     if (!title || !link || !type) {
       alert("plese fill all creadentials!")
     }
-    
+    setloadable(false)
    try {
    const response=await axios.post(`${BACKEND_URL}/api/v1/content`,{title,type,link},{
     headers: {
@@ -35,6 +36,8 @@ export default function CreateContent() {
     alert("content create successfully")
     } catch (error) {
     alert("content create Failed")
+   }finally{
+    setloadable(true);
    }
 
   }
@@ -76,7 +79,7 @@ export default function CreateContent() {
             </select>
           </div>
 
-          <button onClick={Createcontent} className="w-full items-center bg-blue-600 py-2 text-white rounded-md hover:bg-blue-500">Submit</button>
+          <button onClick={Createcontent} className="w-full items-center bg-blue-600 py-2 text-white rounded-md hover:bg-blue-500">{loadable?"Submit":"Submit..."}</button>
           </motion.div>
     </div>
   )
