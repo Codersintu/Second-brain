@@ -1,4 +1,4 @@
-import { useRef} from 'react'
+import { useRef, useState} from 'react'
 import axios from 'axios';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {emailAtom, passwordAtom, registerAtom, usernameAtom } from './Atom';
@@ -18,6 +18,7 @@ function Signup() {
   const username=useRecoilValue(usernameAtom)
   const email=useRecoilValue(emailAtom)
   const password=useRecoilValue(passwordAtom)
+  const [loadable,setloadable]=useState(true)
   const navigate=useNavigate()
 
  async function signup(event: React.MouseEvent<HTMLButtonElement>) {
@@ -29,6 +30,7 @@ function Signup() {
       alert("Please fill all fields!");
       return;
     }
+    setloadable(false)
     try {
       const response = await axios.post(`${BACKEND_URL}/api/v1/register`, {
         username,
@@ -40,10 +42,14 @@ function Signup() {
       alert("Account created successfully!");
     } catch (error: any) {
       alert(error.response?.data?.message || "Signup failed");
+    }finally{
+      setloadable(true)
     }
   }
 
-    async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
+  // ----------- Signin Handler -----------
+
+async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
 
     const email = emailRef.current?.value;
@@ -53,7 +59,7 @@ function Signup() {
       alert("Please fill all fields!");
       return;
     }
-
+     setloadable(false)
     try {
       const response = await axios.post(`${BACKEND_URL}/api/v1/login`, {
         email,
@@ -69,6 +75,8 @@ function Signup() {
 
     } catch (error: any) {
       alert(error.response?.data?.message || "Signin failed");
+    }finally{
+      setloadable(true)
     }
   }
 
@@ -103,7 +111,7 @@ function Signup() {
                 type="submit"
                 className="w-full bg-red-600 text-white p-2 rounded-lg hover:bg-red-700"
               >
-                Login
+                {loadable ? "Login" : "Loading..."}
               </button>
             </form>
             <p className="text-center mt-4">
@@ -153,7 +161,7 @@ function Signup() {
                 type="submit"
                 className="w-full bg-red-600 text-white p-2 rounded-lg hover:bg-red-700"
               >
-                Register
+                {loadable ? "Register" : "Loading..."}
               </button>
             </form>
             <p className="text-center mt-4">
