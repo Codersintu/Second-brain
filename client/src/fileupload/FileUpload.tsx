@@ -14,6 +14,10 @@ export default function FileUpload() {
             alert('File size should not exceed 1MB.');
             return;
         }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        
     }
     return (
         <div className="flex items-center justify-center w-full">
