@@ -27,11 +27,11 @@ function Sidebar() {
                 <img className="w-6" src="../tube.png" alt="" />
                 <p className="hidden md:block">YouTube</p>
             </div>
-            <div className="flex items-center hover:bg-gray-300 p-1 rounded-md cursor-pointer font-semibold gap-5">
+            <div className={`flex items-center hover:bg-gray-300 p-1 rounded-md cursor-pointer font-semibold gap-5 ${FilterContent==="Document📄" ? "bg-gray-300" :null}`} onClick={()=>setFilter("Document📄")}>
                 <img className="w-6" src="../docs.png" alt="" />
                 <p className="hidden md:block">Documents</p>
             </div>
-            <div className="flex items-center hover:bg-gray-300 p-1 rounded-md cursor-pointer font-semibold gap-5">
+            <div className={`flex items-center hover:bg-gray-300 p-1 rounded-md cursor-pointer font-semibold gap-5 ${FilterContent==="Link🔗" ? "bg-gray-300" :null}`} onClick={()=>setFilter("Link🔗")}>
                 <img className="w-6" src="../link.png" alt="" />
                 <p className="hidden md:block">Links</p>
             </div>

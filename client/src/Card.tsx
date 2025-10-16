@@ -4,96 +4,117 @@ import DeleteIcon from "./DeleteIcon"
 import ShareIcon from "./ShareIcon"
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { contentAtom, filterAtom, type ContentItem } from "./Atom";
+import Linkicon from "./Linkicon";
+import DocumentIcon from "./DocumentIcon";
+import MemoryItem from "./MemoryItem";
 
 function Card() {
-  const content=useRecoilValue(contentAtom)
-  const setContent=useSetRecoilState(contentAtom)
-  const FilterContent=useRecoilValue(filterAtom)
+  const content = useRecoilValue(contentAtom)
+  const setContent = useSetRecoilState(contentAtom)
+  const FilterContent = useRecoilValue(filterAtom)
 
   const handleDelete = async (contentId: string) => {
-  try {
-    await axios.delete(`${BACKEND_URL}/api/v1/content`, {
-      headers: {
-        Authorization: localStorage.getItem("token"),
-      },
-      data: { contentId }
-    });
+    try {
+      await axios.delete(`${BACKEND_URL}/api/v1/content`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+        data: { contentId }
+      });
 
-    setContent((prev) =>{
-      const updatedContent = prev.filter(item => item._id !== contentId);
-      localStorage.setItem("cachedContent", JSON.stringify(updatedContent));
-      return updatedContent;
-    });
-  } catch (error) {
-    console.error("Delete failed", error);
-    alert("Failed to delete content");
-  }
-};
+      setContent((prev) => {
+        const updatedContent = prev.filter(item => item._id !== contentId);
+        localStorage.setItem("cachedContent", JSON.stringify(updatedContent));
+        return updatedContent;
+      });
+    } catch (error) {
+      console.error("Delete failed", error);
+      alert("Failed to delete content");
+    }
+  };
   return (
     <>
-    {content
-         .filter((item)=>!FilterContent || item.type === FilterContent)
-         .map((item:ContentItem)=>(
-     <div key={item._id} className="w-72 bg-white shadow-md rounded-xl border p-4 min-h-64">
-      <div className="p-0 flex flex-col gap-10">
-        {/* Header */}
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            {item.type==="Twitter" &&
-            <img src="./x.png" alt="twitter" className="w-5 h-5" />
-            }
-            {item.type ==="Youtube" && <img src="./tube.png" alt="twitter" className="w-7 h-7" />}
-            <h2 className="font-semibold">{item.title}</h2>
+      {content
+        .filter((item) => !FilterContent || item.type === FilterContent)
+        .map((item: ContentItem) => (
+          <div key={item._id} className="w-72 bg-white shadow-md rounded-xl border p-4 min-h-64">
+            <div className="p-0 flex flex-col gap-10">
+              {/* Header */}
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  {item.type === "Twitter" &&
+                    <img src="./x.png" alt="twitter" className="w-5 h-5" />
+                  }
+                  {item.type === "Youtube" && <img src="./tube.png" alt="twitter" className="w-7 h-7" />}
+                  {item.type === "Link🔗" && <Linkicon />}
+                  {item.type === "Document📄" && <DocumentIcon />}
+                  <h2 className="font-semibold">{item.title}</h2>
+                </div>
+                <div className="flex items-center gap-3 ">
+                  <a href={item.link} target="_blank"><ShareIcon /></a>
+                  <div className="" onClick={() => handleDelete(item._id)}><DeleteIcon /></div>
+
+                </div>
+              </div>
+
+              {/* Content */}
+              {/* {item.type === "Youtube" && (() => {
+                let videoId = "";
+                const match = item.link.match(/(?:v=|youtu\.be\/)([^&]+)/);
+                if (match) videoId = match[1];
+                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                return (
+                  <iframe
+                    className="w-64 min-h-[150px]"
+                    src={embedUrl}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                );
+              })()} */}
+
+                  <MemoryItem item={item}/>
+
+             
+
+              {/* twitter emded */}
+              {item.type === "Twitter" &&
+                <blockquote className="twitter-tweet">
+                  <a href={item.link.replace("x.com", "twitter.com")}></a>
+                </blockquote>}
+
+              {/* link uploading system */}
+
+             {item.type === "Link🔗" && <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline truncate"
+              >
+                {item.link}
+              </a>
+              }
+
+              {/* Tags */}
+              <div className="flex gap-2 flex-wrap">
+                <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-lg text-xs">
+                  #productivity
+                </span>
+                <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-lg text-xs">
+                  #learning
+                </span>
+              </div>
+
+              {/* Footer */}
+              <p className="text-xs text-gray-400">Added on {new Date(item.createdAt).toLocaleDateString()}</p>
+            </div>
           </div>
-          <div className="flex items-center gap-3 ">
-            <a href={item.link} target="_blank"><ShareIcon/></a>
-            <div className="" onClick={() => handleDelete(item._id)}><DeleteIcon/></div>
-                       
-          </div>
-        </div>
 
-        {/* Content */}
-        {item.type === "Youtube" && (() => {
-  let videoId = "";
-  const match = item.link.match(/(?:v=|youtu\.be\/)([^&]+)/);
-  if (match) videoId = match[1];
-  const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-  return (
-    <iframe
-      className="w-64 min-h-[150px]"
-      src={embedUrl}
-      title="YouTube video player"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerPolicy="strict-origin-when-cross-origin"
-      allowFullScreen
-    />
-  );
-})()}
-
-
-        {item.type==="Twitter" &&
-         <blockquote className="twitter-tweet">
-       <a href={item.link.replace("x.com","twitter.com")}></a> 
-       </blockquote>}
-
-        {/* Tags */}
-        <div className="flex gap-2 flex-wrap">
-          <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-lg text-xs">
-            #productivity
-          </span>
-          <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-lg text-xs">
-            #learning
-          </span>
-        </div>
-
-        {/* Footer */}
-        <p className="text-xs text-gray-400">Added on {new Date(item.createdAt).toLocaleDateString()}</p>
-      </div>
-    </div>
-        
-     ))}
-     </>
+        ))}
+    </>
   )
 }
 
