@@ -9,6 +9,7 @@ function Sidebar() {
  function Logouthandler() {
     localStorage.removeItem("token")
     localStorage.removeItem("cachedContent")
+    localStorage.removeItem("cachedFile")
     navigate("/auth")
  }
   return (
@@ -39,7 +40,7 @@ function Sidebar() {
             </div>
           </Link>
   
-            <Link to="/document">
+            <Link to="/">
             <div className={`flex items-center hover:bg-gray-300 p-1 rounded-md cursor-pointer font-semibold gap-5 ${FilterContent==="Document📄" ? "bg-gray-300" :null}`} onClick={()=>setFilter("Document📄")}>
                 <img className="w-6" src="https://ik.imagekit.io/j3whydwtk/general/docs.png" alt="" />
                 <p className="hidden md:block">Documents</p>

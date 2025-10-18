@@ -1,12 +1,14 @@
 
-import { useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import Card from "./Card"
 import ShareIcon from "./ShareIcon"
 import ErrorBoundary from "./Error/ErrorBoundary"
-import { showAtom } from "./Atom"
+import { filterAtom, showAtom } from "./Atom"
+import DocumentItem from "./DocumentItem"
 
 function Content() {
 const setshow=useSetRecoilState(showAtom)
+const filter=useRecoilValue(filterAtom)
 
   return (
     <>
@@ -26,7 +28,8 @@ const setshow=useSetRecoilState(showAtom)
 
      <div className="mt-12 card grid grid-cols-4  gap-10">
       <ErrorBoundary>
-      <Card/>
+        {filter === "Document📄" ? <DocumentItem/> :
+      <Card/>}
       </ErrorBoundary>
      </div>
     </div>

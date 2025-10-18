@@ -30,7 +30,7 @@ function DocumentItem() {
          }
      }
   return (
-    <div className="grid grid-cols-4 gap-10 pt-12 px-10 bg-cyan-50">
+    <>
     { Array.isArray(UploadedDocs) && UploadedDocs.map((item) => (
     <div key={item._id} className="w-72 bg-gray-300 shadow-md rounded-xl border p-4 min-h-64">
             <div className="p-0 flex flex-col gap-10">
@@ -53,7 +53,7 @@ function DocumentItem() {
             </div>
           </div>
         ))}
-    </div>
+    </>
   )
 }
 

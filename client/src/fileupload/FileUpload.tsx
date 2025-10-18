@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { showAtom, uploadAtom, type DocumentItem } from "../Atom";
 import { BACKEND_URL } from "../Config";
-import { useNavigate } from "react-router-dom";
 type UploadStatus = "ready" | "uploading" | "success" | "error"
 
 function FileUpload() {
@@ -14,7 +13,6 @@ function FileUpload() {
     const [uploadStatus, setUploadStatus] = useState<UploadStatus>("ready");
     const [uploadProgress, setUploadProgress] = useState(0);
     const setUploadedDocs=useSetRecoilState(uploadAtom);
-    const navigate=useNavigate()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFile(e.target.files[0]);
@@ -57,7 +55,6 @@ function FileUpload() {
             setUploadProgress(100);
            const time=setTimeout(() => {
                 setshow(false);
-                navigate("/document")
             }, 1000);
             return () => clearTimeout(time);
         }
