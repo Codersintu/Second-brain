@@ -1,1 +1,1 @@
-export const BACKEND_URL="https://server-4avi.onrender.com"
+export const BACKEND_URL="http://localhost:4000"

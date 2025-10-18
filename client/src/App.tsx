@@ -6,6 +6,7 @@ import Content from './Content'
 import Signup from './Signup'
 import { RecoilRoot } from 'recoil'
 import { useEffect } from 'react'
+import DocumentItem from './DocumentItem'
 
 function App() {
   const navigate=useNavigate()
@@ -23,6 +24,7 @@ function App() {
     <Routes>
     <Route element={<Home/>}>
       <Route path='/' element={<Content/>}/>
+      <Route path='/document' element={<DocumentItem/>}/>
     </Route>
     <Route path='/auth' element={<Signup/>}/>
   </Routes>

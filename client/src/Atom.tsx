@@ -28,6 +28,7 @@ export const filterAtom=atom({
   default:""
 })
 
+
 export interface ContentItem {
   _id: string;
   link: string;
@@ -44,7 +45,7 @@ export const contentAtom = atom<ContentItem[]>({
     key: "contentAtomSelector",
     get: async () => {
       const token = localStorage.getItem("token");
-     if (!token) return []; // skip call if no token
+     if (!token) return []; 
      
       try {
         const res = await axios.get(`${BACKEND_URL}/api/v1/content`, {
@@ -61,3 +62,33 @@ export const contentAtom = atom<ContentItem[]>({
     },
   }),
 });
+
+
+export interface DocumentItem {
+  _id: string;
+  imageUrl: string;
+  title: string;
+ createdAt: string;
+ userId:string
+}
+export const uploadAtom=atom<DocumentItem[]>({
+  key:"uploadatom",
+  default:selector<DocumentItem[]>({
+    key:"uploadselector",
+    get:async()=>{
+      const token=localStorage.getItem("token")
+      if (!token) return [];
+
+      try {
+        const response=await axios.get(`${BACKEND_URL}/my-memories`,{
+          headers:{
+                "Authorization":localStorage.getItem("token")||""
+            }
+        })
+        return response.data
+      } catch (error) {
+        return []
+      }
+    }
+  })
+})

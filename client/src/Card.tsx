@@ -37,15 +37,15 @@ function Card() {
       {content
         .filter((item) => !FilterContent || item.type === FilterContent)
         .map((item: ContentItem) => (
-          <div key={item._id} className="w-72 bg-white shadow-md rounded-xl border p-4 min-h-64">
+          <div key={item._id} className="w-72 bg-white  rounded-xl border p-4 min-h-64">
             <div className="p-0 flex flex-col gap-10">
               {/* Header */}
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   {item.type === "Twitter" &&
-                    <img src="./x.png" alt="twitter" className="w-5 h-5" />
+                    <img src="https://ik.imagekit.io/j3whydwtk/general/x.png" alt="twitter" className="w-5 h-5" />
                   }
-                  {item.type === "Youtube" && <img src="./tube.png" alt="twitter" className="w-7 h-7" />}
+                  {item.type === "Youtube" && <img src="https://ik.imagekit.io/j3whydwtk/general/tube.png" alt="twitter" className="w-7 h-7" />}
                   {item.type === "Link🔗" && <Linkicon />}
                   {item.type === "Document📄" && <DocumentIcon />}
                   <h2 className="font-semibold">{item.title}</h2>
@@ -57,28 +57,7 @@ function Card() {
                 </div>
               </div>
 
-              {/* Content */}
-              {/* {item.type === "Youtube" && (() => {
-                let videoId = "";
-                const match = item.link.match(/(?:v=|youtu\.be\/)([^&]+)/);
-                if (match) videoId = match[1];
-                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                return (
-                  <iframe
-                    className="w-64 min-h-[150px]"
-                    src={embedUrl}
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                );
-              })()} */}
-
                   <MemoryItem item={item}/>
-
-             
 
               {/* twitter emded */}
               {item.type === "Twitter" &&

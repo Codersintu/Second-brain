@@ -1,59 +1,97 @@
+import axios from "axios";
+import imageCompression from "browser-image-compression";
+import { useRef, useState } from "react";
+import { useSetRecoilState } from "recoil";
+import { showAtom, uploadAtom, type DocumentItem } from "../Atom";
+import { BACKEND_URL } from "../Config";
+import { useNavigate } from "react-router-dom";
+type UploadStatus = "ready" | "uploading" | "success" | "error"
 
-export default function FileUpload() {
-    function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const file = event.target.files?.[0];
+function FileUpload() {
+     const setshow = useSetRecoilState(showAtom)
+    const [file, setFile] = useState<File | null>(null);
+    const titleRef = useRef<HTMLInputElement>(null);
+    const [uploadStatus, setUploadStatus] = useState<UploadStatus>("ready");
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const setUploadedDocs=useSetRecoilState(uploadAtom);
+    const navigate=useNavigate()
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setFile(e.target.files[0]);
+        }
+    }
+
+    const handleFileUpload = async () => {
         if (!file) return;
-        console.log("Selected file:", file);
-
-        if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
-            alert('Please select a PNG or JPEG image file.');
-            return;
-        }
-
-        if (file.size > 1024 * 1024) {
-            alert('File size should not exceed 1MB.');
-            return;
-        }
-
+        setUploadStatus("uploading");
+        setUploadProgress(0);
+        const title = titleRef.current?.value
+        const compressedFile = await imageCompression(file, {
+            maxSizeMB: 1, // compress to max 1MB
+            maxWidthOrHeight: 1920,
+            useWebWorker: true
+        });
         const formData = new FormData();
-        formData.append('file', file);
-        
+        formData.append("file", compressedFile);
+        formData.append("title", title || "");
+        try {
+            const response = await axios.post(`${BACKEND_URL}/upload`,
+                formData
+                , {
+                    headers: {
+                        "Authorization": localStorage.getItem("token") || "",
+                        "Content-Type": "multipart/form-data"
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        const progress = progressEvent.total ? Math.round((progressEvent.loaded * 100) / progressEvent.total) : 0;
+                        setUploadProgress(progress);
+                    }
+                });
+            setUploadedDocs((old) => {
+                const updatedlocal = [...old, response.data as DocumentItem]
+                localStorage.setItem("cachedFile", JSON.stringify(updatedlocal))
+                return updatedlocal;
+            });
+            setUploadStatus("success");
+            setFile(null);
+            setUploadProgress(100);
+           const time=setTimeout(() => {
+                setshow(false);
+                navigate("/document")
+            }, 1000);
+            return () => clearTimeout(time);
+        }
+        catch (error) {
+            console.error("Error uploading file:", error);
+            setUploadStatus("error");
+            setUploadProgress(0);
+        }
     }
     return (
-        <div className="flex items-center justify-center w-full">
-            <label
-                htmlFor="dropzone-file"
-                className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-            >
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <svg
-                        className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 16"
-                    >
-                        <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 
-                 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 
-                 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                        />
-                    </svg>
-
-                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span className="font-semibold">Click to upload</span> or drag and drop
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                        SVG, PNG, JPG or GIF (MAX. 800x400px)
-                    </p>
+        <div>
+            <label className="block text-sm font-medium mb-1">Img Title</label>
+            <input
+                ref={titleRef}
+                type="text"
+                placeholder="Add a Img title"
+                className="w-full border mb-8 border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none"
+            />
+            
+            <label className="block text-sm font-medium mb-2">Select File:</label>
+            <input className="mb-10" type="file" onChange={handleChange} />
+            {uploadStatus === "uploading" &&
+                <div style={{ width: "100%", backgroundColor: "#e0e0e0", borderRadius: "5px", marginTop: "10px" }}>
+                    <div style={{ width: `${uploadProgress}%`, height: "20px", backgroundColor: "#76c7c0", borderRadius: "5px", textAlign: "center", color: "white" }}>
+                        {uploadProgress}%
+                    </div>
                 </div>
-
-                <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} />
-            </label>
+            }
+            {file && uploadStatus !== "uploading" && <button className="w-full items-center bg-blue-600 py-2 text-white rounded-md hover:bg-blue-500" onClick={handleFileUpload}>submit</button>}
+            {uploadStatus === "uploading" && <h2 className="text-gray-600">Uploading...</h2>}
+            {uploadStatus === "success" && <h2 className="text-green-600">Upload Successful!</h2>}
+            {uploadStatus === "error" && <h2 className="text-red-600">Upload Failed. Please try again.</h2>}
         </div>
-    );
+    )
 }
+
+export default FileUpload;

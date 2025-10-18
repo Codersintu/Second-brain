@@ -13,7 +13,7 @@ export default function CreateContent() {
   const selectRef = useRef<HTMLSelectElement>(null);
   const setContent = useSetRecoilState(contentAtom)
   const [loadable, setloadable] = useState(false)
-  const [selectType,setSelectType]=useState("")
+  const [selectType, setSelectType] = useState("")
 
   async function Createcontent(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -35,11 +35,12 @@ export default function CreateContent() {
         localStorage.setItem("cachedContent", JSON.stringify(updated));
         return updated
       });
-      setshow(false)
     } catch (error) {
       alert("content create Failed")
     } finally {
       setloadable(false);
+      setshow(false)
+
     }
 
   }
@@ -53,7 +54,7 @@ export default function CreateContent() {
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Type</label>
-          <select ref={selectRef} onChange={(e)=>setSelectType(e.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none">
+          <select ref={selectRef} onChange={(e) => setSelectType(e.target.value)} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none">
             <option>Youtube</option>
             <option>Twitter</option>
             <option>Link🔗</option>
@@ -61,7 +62,7 @@ export default function CreateContent() {
           </select>
         </div>
 
-        <div className="mb-4 mt-5">
+        {selectType !== "Document📄" && <div className="mb-4 mt-5">
           <label className="block text-sm font-medium mb-1">Title</label>
           <input
             ref={titleRef}
@@ -69,7 +70,7 @@ export default function CreateContent() {
             placeholder="Add a title"
             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none"
           />
-        </div>
+        </div>}
 
         {/* Link */}
         {selectType === "Document📄" ? <div className="mb-8"><FileUpload /></div> :
@@ -83,9 +84,7 @@ export default function CreateContent() {
             />
           </div>
         }
-
-
-        <button onClick={Createcontent} className={`w-full items-center bg-blue-600 py-2 text-white rounded-md hover:bg-blue-500 ${loadable ? "cursor-not-allowed opacity-50" : ""}`}> {loadable ? "Submit Content🏃‍♂️‍➡️..." : "Submit"}</button>
+        {selectType !== "Document📄" && <button onClick={Createcontent} className={`w-full items-center bg-blue-600 py-2 text-white rounded-md hover:bg-blue-500 ${loadable ? "cursor-not-allowed opacity-50" : ""}`}> {loadable ? "Submit Content🏃‍♂️‍➡️..." : "Submit"}</button>}
       </motion.div>
     </div>
   )
