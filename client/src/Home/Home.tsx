@@ -16,7 +16,7 @@ export default function Home() {
     <div className="flex ">
       <Sidebar/>
     <ErrorBoundary>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div className='flex justify-center items-center text-2xl '>Loading...</div>}>
       <Outlet />
       </Suspense>
     </ErrorBoundary>
