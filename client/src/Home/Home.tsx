@@ -6,6 +6,7 @@ import { useRecoilValue} from 'recoil'
 import { showAtom} from "../Atom"
 import ErrorBoundary from '../Error/ErrorBoundary'
 import { Suspense } from 'react'
+import CardSkeleton from '../CardSkeleton'
 
 export default function Home() {
      const show=useRecoilValue(showAtom)
@@ -16,7 +17,19 @@ export default function Home() {
     <div className="flex ">
       <Sidebar/>
     <ErrorBoundary>
-      <Suspense fallback={<div className='flex items-center text-2xl '>Loading...</div>}>
+      <Suspense fallback={<div className='grid grid-cols-4 mt-10 card'>
+        <CardSkeleton/>
+        <CardSkeleton/>
+        <CardSkeleton/>
+        <CardSkeleton/>
+        <CardSkeleton/>
+        <CardSkeleton/>
+        <CardSkeleton/>
+        <CardSkeleton/>
+        <CardSkeleton/>
+        <CardSkeleton/>
+        <CardSkeleton/>
+       </div>}>
       <Outlet />
       </Suspense>
     </ErrorBoundary>
