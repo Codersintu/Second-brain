@@ -71,24 +71,7 @@ export interface DocumentItem {
  createdAt: string;
  userId:string
 }
-export const uploadAtom=atom<DocumentItem[]>({
-  key:"uploadatom",
-  default:selector<DocumentItem[]>({
-    key:"uploadselector",
-    get:async()=>{
-      const token=localStorage.getItem("token")
-      if (!token) return [];
-
-      try {
-        const response=await axios.get(`${BACKEND_URL}/my-memories`,{
-          headers:{
-                "Authorization":localStorage.getItem("token")||""
-            }
-        })
-        return response.data
-      } catch (error) {
-        return []
-      }
-    }
-  })
-})
+export const uploadAtom = atom<DocumentItem[]>({
+  key: "uploadAtom",
+  default: [], 
+});

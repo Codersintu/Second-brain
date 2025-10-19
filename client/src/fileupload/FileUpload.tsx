@@ -1,18 +1,19 @@
 import axios from "axios";
 import imageCompression from "browser-image-compression";
 import { useRef, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { showAtom, uploadAtom, type DocumentItem } from "../Atom";
 import { BACKEND_URL } from "../Config";
 type UploadStatus = "ready" | "uploading" | "success" | "error"
 
 function FileUpload() {
-     const setshow = useSetRecoilState(showAtom)
+    const setshow = useSetRecoilState(showAtom)
     const [file, setFile] = useState<File | null>(null);
     const titleRef = useRef<HTMLInputElement>(null);
     const [uploadStatus, setUploadStatus] = useState<UploadStatus>("ready");
     const [uploadProgress, setUploadProgress] = useState(0);
-    const setUploadedDocs=useSetRecoilState(uploadAtom);
+    const setUploadedDocs = useSetRecoilState(uploadAtom);
+    const UploadedDocs=useRecoilValue(uploadAtom)
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFile(e.target.files[0]);
@@ -45,15 +46,13 @@ function FileUpload() {
                         setUploadProgress(progress);
                     }
                 });
-            setUploadedDocs((old) => {
-                const updatedlocal = [...old, response.data as DocumentItem]
-                localStorage.setItem("cachedFile", JSON.stringify(updatedlocal))
-                return updatedlocal;
-            });
+            const updatedlocal = [...(UploadedDocs || []), response.data as DocumentItem];
+            localStorage.setItem("cachedFile", JSON.stringify(updatedlocal));
+            setUploadedDocs(updatedlocal);
             setUploadStatus("success");
             setFile(null);
             setUploadProgress(100);
-           const time=setTimeout(() => {
+            const time = setTimeout(() => {
                 setshow(false);
             }, 1000);
             return () => clearTimeout(time);
@@ -73,7 +72,7 @@ function FileUpload() {
                 placeholder="Add a Img title"
                 className="w-full border mb-8 border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-red-500 focus:outline-none"
             />
-            
+
             <label className="block text-sm font-medium mb-2">Select File:</label>
             <input className="mb-10" type="file" onChange={handleChange} />
             {uploadStatus === "uploading" &&
