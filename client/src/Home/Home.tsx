@@ -17,7 +17,7 @@ export default function Home() {
     <div className="flex ">
       <Sidebar/>
     <ErrorBoundary>
-      <Suspense fallback={<div className='grid grid-cols-4 mt-20 card gap-10'>
+      <Suspense fallback={<div className='grid grid-cols-4 mt-20 card gap-10 px-10'>
         <CardSkeleton/>
         <CardSkeleton/>
         <CardSkeleton/>

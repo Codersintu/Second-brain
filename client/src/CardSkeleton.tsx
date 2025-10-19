@@ -17,10 +17,10 @@ function CardSkeleton() {
         </div>
 
         {/* Memory content */}
-        <Skeleton count={3} height={15} />
+        <Skeleton count={5} height={15} />
 
         {/* Link or embed placeholder */}
-        <Skeleton height={20} width="80%" />
+        <Skeleton count={3} height={20} width="80%" />
 
         {/* Tags */}
         <div className="flex gap-2 flex-wrap">
