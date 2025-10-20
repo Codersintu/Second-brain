@@ -2,10 +2,10 @@
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import './App.css'
 import Home from './Home/Home'
-import Content from './Content'
 import Signup from './Signup'
 import { RecoilRoot } from 'recoil'
-import { startTransition, useEffect } from 'react'
+import React, { startTransition, useEffect } from 'react'
+const Content=React.lazy(()=>import('./Content'))
 
 function App() {
   const navigate=useNavigate()

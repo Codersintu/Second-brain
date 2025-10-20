@@ -4,7 +4,8 @@ import Card from "./Card"
 import ShareIcon from "./ShareIcon"
 import ErrorBoundary from "./Error/ErrorBoundary"
 import { filterAtom, showAtom } from "./Atom"
-import DocumentItem from "./DocumentItem"
+import React from "react"
+const DocumentItem=React.lazy(()=>import("./DocumentItem"))
 
 function Content() {
 const setshow=useSetRecoilState(showAtom)
