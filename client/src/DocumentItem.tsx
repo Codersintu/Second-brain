@@ -13,7 +13,7 @@ function DocumentItem() {
   const UploadedDocs = useRecoilValue(uploadAtom);
   
   useEffect(() => {
-    (async () => {
+    async function fetchingFileData(){
       const token = localStorage.getItem("token");
       if (!token) return;
       const res = await axios.get(`${BACKEND_URL}/my-memories`, {
@@ -21,7 +21,8 @@ function DocumentItem() {
       });
       setUploadedDocs(res.data);
       console.log(res.data)
-    })();
+    };
+    fetchingFileData();
   }, []);
 
 

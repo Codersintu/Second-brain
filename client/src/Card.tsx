@@ -7,11 +7,31 @@ import { contentAtom, filterAtom, type ContentItem } from "./Atom";
 import Linkicon from "./Linkicon";
 import DocumentIcon from "./DocumentIcon";
 import MemoryItem from "./MemoryItem";
+import { useEffect } from "react";
 
 function Card() {
   const content = useRecoilValue(contentAtom)
   const setContent = useSetRecoilState(contentAtom)
   const FilterContent = useRecoilValue(filterAtom)
+
+  // ✅ Background refresh on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(`${BACKEND_URL}/api/v1/content`, {
+          headers: { Authorization: localStorage.getItem("token") || "" },
+        });
+         const data = res.data.contentall || [];
+      const sorted = data.sort(
+        (a:ContentItem, b:ContentItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      setContent(sorted);
+      localStorage.setItem("cachedContent", JSON.stringify(sorted));
+      } catch (error) {
+        console.error("Background refresh failed:", error);
+      }
+    })();
+  }, [setContent]);
 
   const handleDelete = async (contentId: string) => {
     try {

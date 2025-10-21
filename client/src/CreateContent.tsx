@@ -30,17 +30,26 @@ export default function CreateContent() {
           Authorization: localStorage.getItem("token"),
         }
       })
+      const newItem =
+      response.data.content ||
+      response.data.newContent ||
+      (response.data.contentall && response.data.contentall[0]);
+
+    if (!newItem || !newItem._id) {
+      console.error("Backend didn’t return full item:", response.data);
+      alert("Server did not return content item");
+      return;
+    }
       setContent((old: ContentItem[]) => {
-        const updated = [...old, response.data as ContentItem];
+        const updated = [newItem as ContentItem,...old];
         localStorage.setItem("cachedContent", JSON.stringify(updated));
         return updated
       });
+       setshow(false)
     } catch (error) {
       alert("content create Failed")
     } finally {
       setloadable(false);
-      setshow(false)
-
     }
 
   }

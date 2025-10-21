@@ -46,15 +46,28 @@ export const contentAtom = atom<ContentItem[]>({
     get: async () => {
       const token = localStorage.getItem("token");
      if (!token) return []; 
-     
+     const cached=localStorage.getItem("cachedContent")
+     if (cached) {
+        const data = JSON.parse(cached);
+        return data.sort(
+          (a: ContentItem, b: ContentItem) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      }
       try {
         const res = await axios.get(`${BACKEND_URL}/api/v1/content`, {
           headers: {
             Authorization: localStorage.getItem("token") || "",
           },
         });
-        
-        return res.data.contentall as ContentItem[];
+        const data = res.data.contentall || [];
+        const sorted = data.sort(
+          (a: ContentItem, b: ContentItem) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+
+        localStorage.setItem("cachedContent", JSON.stringify(sorted));
+        return sorted;
       } catch (error) {
         console.error("Error fetching content:", error);
         return [];
