@@ -3,7 +3,7 @@ import DocumentIcon from "./DocumentIcon";
 import ShareIcon from "./ShareIcon";
 import axios from "axios";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { uploadAtom } from "./Atom";
+import { uploadAtom, type Documentdata } from "./Atom";
 import { BACKEND_URL } from "./Config";
 import DeleteIcon from "./DeleteIcon";
 import { useEffect } from "react";
@@ -14,16 +14,20 @@ function DocumentItem() {
   
   useEffect(() => {
     async function fetchingFileData(){
-      const token = localStorage.getItem("token");
-      if (!token) return;
       const res = await axios.get(`${BACKEND_URL}/my-memories`, {
-        headers: { Authorization: token },
+        headers: {
+          Authorization:localStorage.getItem("token"),
+        }
       });
-      setUploadedDocs(res.data);
-      console.log(res.data)
+      const data=res.data.memories
+      const sorted=data.sort((a:Documentdata,b:Documentdata)=>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+     setUploadedDocs(sorted)
+     localStorage.setItem("CachedDocument",JSON.stringify(sorted));
     };
     fetchingFileData();
-  }, []);
+  }, [setUploadedDocs]);
 
 
   const handleDelete = async (docsId: string) => {

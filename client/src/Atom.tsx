@@ -77,14 +77,47 @@ export const contentAtom = atom<ContentItem[]>({
 });
 
 
-export interface DocumentItem {
+export interface Documentdata {
   _id: string;
   imageUrl: string;
   title: string;
  createdAt: string;
  userId:string
 }
-export const uploadAtom = atom<DocumentItem[]>({
-  key: "uploadAtom",
-  default: [], 
+export const uploadAtom = atom<Documentdata[]>({
+  key: "uploadedAtom",
+  default:selector<Documentdata[]>({
+   key:"DocumentSelector",
+   get:async()=>{
+    const token=localStorage.getItem("token")
+    if(!token) return []
+    const cached=localStorage.getItem("CachedDocument")
+    if (cached) {
+      const data=JSON.parse(cached)
+      return data.sort((a:Documentdata,b:Documentdata)=>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    }
+
+    try {
+      const response=await axios.get(`${BACKEND_URL}/my-memories`,{
+        headers:{
+          Authorization:localStorage.getItem("token")
+        }
+      })
+      console.log("response,dat",response.data)
+      const data=response.data.memories;
+      console.log(data)
+      const sorted=data.sort((a:Documentdata,b:Documentdata)=>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+      localStorage.setItem("CachedDocument",JSON.stringify(sorted))
+      return sorted;
+    } catch (error) {
+      console.error("Error fetching content:", error);
+        return [];
+    }
+    
+   }
+  }) 
 });

@@ -1,8 +1,8 @@
 import axios from "axios";
 import imageCompression from "browser-image-compression";
 import { useRef, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { showAtom, uploadAtom, type DocumentItem } from "../Atom";
+import { useSetRecoilState } from "recoil";
+import { showAtom, uploadAtom, type Documentdata } from "../Atom";
 import { BACKEND_URL } from "../Config";
 type UploadStatus = "ready" | "uploading" | "success" | "error"
 
@@ -13,7 +13,6 @@ function FileUpload() {
     const [uploadStatus, setUploadStatus] = useState<UploadStatus>("ready");
     const [uploadProgress, setUploadProgress] = useState(0);
     const setUploadedDocs = useSetRecoilState(uploadAtom);
-    const UploadedDocs=useRecoilValue(uploadAtom)
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFile(e.target.files[0]);
@@ -46,9 +45,18 @@ function FileUpload() {
                         setUploadProgress(progress);
                     }
                 });
-            const updatedlocal = [...(UploadedDocs || []), response.data as DocumentItem];
-            localStorage.setItem("cachedFile", JSON.stringify(updatedlocal));
-            setUploadedDocs(updatedlocal);
+            const newItem = response.data.memory || response.data.newItem || (response.data.memories && response.data.memories[0]);
+            if (!newItem || !newItem._id) {
+                console.error("Backend didn’t return full item:", response.data);
+                alert("Server did not return content item");
+                return;
+            }
+            setUploadedDocs((old:Documentdata[])=>{
+                const updated=[newItem as Documentdata,...old]
+                localStorage.setItem("CachedDocument",JSON.stringify(updated))
+                return updated;
+            })
+
             setUploadStatus("success");
             setFile(null);
             setUploadProgress(100);
