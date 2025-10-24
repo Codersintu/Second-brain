@@ -1,11 +1,10 @@
-// CustomHook, but i'm going to use instead of customHook
-// import { useEffect, useState } from "react";
+// // CustomHook, but i'm going to use instead of customHook
+// import { useState } from "react";
 // import axios from "axios"
 // import { BACKEND_URL } from "../Config";
 
 
 // export function useFetch(url:string){
-//     const [hashed,setHashed]=useState("")
 
 //     async function shareBtn(){
 //   const response= await axios.post(url,{
@@ -25,16 +24,4 @@
 //    }
 
 //    return  {hashed,shareBtn}
-// }
-
-
-// export function useDebaunce(value:string,delay:number){
-//     const [debounceValue,setDebounceValue]=useState(value)
-//     useEffect(()=>{
-//         const handler=setTimeout(()=>{
-//             setDebounceValue(value)
-//         },delay)
-//         return ()=>clearTimeout(handler)
-//     },[value,delay])
-//     return debounceValue
 // }

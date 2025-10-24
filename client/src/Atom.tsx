@@ -6,6 +6,10 @@ export const showAtom=atom({
     key:"showItem",
     default:false
 })
+export const showShareAtom=atom({
+    key:"showShareItem",
+    default:false
+})
 export const usernameAtom=atom({
     key:"usernameItem",
     default:""

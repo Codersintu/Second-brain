@@ -3,12 +3,12 @@ import { useRecoilValue, useSetRecoilState } from "recoil"
 import Card from "./Card"
 import ShareIcon from "./ShareIcon"
 import ErrorBoundary from "./Error/ErrorBoundary"
-import { filterAtom, showAtom } from "./Atom"
+import { filterAtom, showAtom, showShareAtom } from "./Atom"
 import DocumentItem from "./DocumentItem"
-// const DocumentItem=React.lazy(()=>import("./DocumentItem"))
 
 function Content() {
 const setshow=useSetRecoilState(showAtom)
+const setshowShare=useSetRecoilState(showShareAtom)
 const filter=useRecoilValue(filterAtom)
 
   return (
@@ -17,9 +17,9 @@ const filter=useRecoilValue(filterAtom)
      <div className="flex justify-between items-center">
       <h1 className="md:text-2xl text-xl font-semibold">All Memory😍</h1>
       <div className="flex gap-5 items-center">
-        <div className="flex items-center gap-2 bg-cyan-100 rounded-lg md:p-2 p-1 cursor-pointer">
+        <div onClick={()=>setshowShare(true)} className="flex items-center gap-2 bg-cyan-100 rounded-lg md:p-2 p-1 cursor-pointer">
           <ShareIcon/>
-          <p className="text-blue-600 hidden md:block">Share Brain</p>
+          <p className="text-blue-600 hidden md:block" >Share Brain</p>
         </div>
         {/* created own btn  */}
         <button className="bg-blue-600 md:p-2 py-1  rounded-md text-white font-serif hover:bg-blue-500" onClick={()=>setshow(true)}>+ Add Content</button>
