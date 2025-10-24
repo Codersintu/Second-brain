@@ -15,9 +15,12 @@ function Sidebar() {
   return (
     <div className="md:w-64 w-16 h-screen shadow-md bg-white top-0 sticky z-10">
       <div className="flex flex-col  md:px-5 px-2 py-4 gap-10">
-        <div className="flex gap-4 items-center">
-            <img className="w-10" src="https://ik.imagekit.io/j3whydwtk/general/brain.png" alt="" />
-            <h1 className="text-2xl hidden md:block text-blue-600 font-semibold">Second Brain</h1>
+        <div className="md:flex-row flex flex-col md:gap-4 gap-2 items-center">
+            <img className="w-12 h-12" src="https://ik.imagekit.io/j3whydwtk/general/brain1.png" alt="" />
+            <div className="flex flex-col">
+            <h1 className="text-2xl hidden md:block text-blue-800 font-bold">Second Brain</h1>
+            <p className="text-xs md:text-gray-500 text-gray-900 text-center">Your Memory Enviroment</p>
+            </div>
         </div>
          <div className="flex flex-col justify-center gap-7">
           <Link to="/">

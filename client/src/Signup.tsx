@@ -79,12 +79,14 @@ async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-300">
+    <div className="md:flex-row flex flex-col  min-h-screen gap-10 bg-gray-900">
+      <div className="flex-1  bg-cover bg-center" style={{backgroundImage:"url('https://ik.imagekit.io/j3whydwtk/Brainly/bg.jpg.jpg')",height:"700px"}}></div>
+    <div className="flex flex-1 items-center justify-center min-h-screen"  >
       <div className="bg-white p-6 rounded-2xl shadow-lg w-96">
         {isRegistered ? (
           // ----------- Login Form -----------
           <div>
-            <h2 className="text-2xl font-bold text-center mb-6">Login to your account</h2>
+            <h2 className="text-2xl font-bold text-center mb-6 text-blue-900">Login to Second Brain</h2>
             <form className="space-y-4">
               <input
               ref={emailRef}
@@ -125,7 +127,7 @@ async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
         ) : (
           // ----------- Register Form -----------
           <div>
-            <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
+            <h2 className="text-2xl font-bold text-center mb-6 text-blue-900">Register to Second Brain</h2>
             <form className="space-y-4">
               <input
               ref={usernameref}
@@ -175,6 +177,7 @@ async function SigninHandler(event: React.MouseEvent<HTMLButtonElement>) {
           </div>
         )}
       </div>
+    </div>
     </div>
   )
 }
