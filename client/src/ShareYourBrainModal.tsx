@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ShareIcon from "./ShareIcon";
-import { showShareAtom } from "./Atom";
-import { useSetRecoilState } from "recoil";
+import { hashedlinkAtom, showShareAtom } from "./Atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { BACKEND_URL } from "./Config";
 import axios from "axios";
 import CopyIcon from "./CopyIcon";
@@ -11,7 +11,8 @@ import { motion } from "motion/react"
 export default function ShareYourBrainModal() {
     const [isPublic, setIsPublic] = useState(false);
     const setshowShare = useSetRecoilState(showShareAtom)
-    const [hashedlink, setHashedlink] = useState("")
+    const setHashedlink=useSetRecoilState(hashedlinkAtom)
+    const hashedlink=useRecoilValue(hashedlinkAtom)
     const [LinkReady, setLinkReady] = useState(false)
     const [loading,setLoading]=useState(false)
 
@@ -25,12 +26,8 @@ export default function ShareYourBrainModal() {
                     Authorization: localStorage.getItem("token"),
                 },
             })
-            console.log("share link", response.data)
-            console.log("hash:", response.data.hash);
-            console.log("id:", response.data._id);
-
-            const Hash = `${BACKEND_URL}/brain/${response.data.hash}`
-            setHashedlink(Hash)
+            console.log(response.data)
+            setHashedlink(response.data.hash)
             setLinkReady(true)
             setIsPublic(true)
         } catch (error) {
@@ -40,6 +37,22 @@ export default function ShareYourBrainModal() {
             setLoading(false)
         }
     }
+
+    const disableLink = async () => {
+        try {
+            await axios.post(`${BACKEND_URL}/api/v1/brain/share`, {
+                share: false
+            }, {
+                headers: {
+                    Authorization: localStorage.getItem("token"),
+                },
+            });
+            setHashedlink("");
+            setLinkReady(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     const handleCopy = () => {
         navigator.clipboard.writeText(hashedlink);
     };
@@ -71,18 +84,24 @@ export default function ShareYourBrainModal() {
                     <div className="flex justify-between items-center">
                         <div className="p-4">
                             <p className="font-bold text-gray-900">Enable Public Sharing</p>
-                            <p className="text-gray-500 text-sm">
-                                Allow others to view your notes collection through a public link
-                            </p>
+                            <p className="text-gray-500 text-sm"> Allow others to view your notes collection through a public link</p>
                         </div>
 
                         <button
-                            onClick={() => setIsPublic(!isPublic)}
+                            onClick={async () => {
+                                if (isPublic) {
+                                    await disableLink();
+                                    setIsPublic(false);
+                                } else {
+                                    await generateShareLink();
+                                }
+                            }}
                             className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${isPublic ? "bg-green-500" : "bg-gray-300"
                                 }`}
+                            
                         >
                             <div
-                                className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-300 ${isPublic ? "translate-x-6" : ""
+                                className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-300 ${isPublic ? "translate-x-5" : ""
                                     }`}
                             />
                         </button>
@@ -102,23 +121,23 @@ export default function ShareYourBrainModal() {
                     </div>
                 ) : (
                     <>
-                        <div className="flex items-center border rounded-lg p-2 mb-5">
+                        <div className="flex items-center p-2 mb-5 gap-3">
                             <input
-                                value={hashedlink}
+                                value={`${window.location.origin}/brain/${hashedlink}`}
                                 readOnly
-                                className="flex-1 text-sm bg-transparent outline-none"
+                                className="flex-1 text-sm outline-none p-2 shadow-sm border bg-gray-100 rounded-md"
                             />
                             <button
                                 onClick={handleCopy}
-                                className="p-2 hover:bg-gray-100 rounded-md"
+                                className="bg-gray-100 rounded-md shadow-sm p-2"
                             >
                                 <CopyIcon />
                             </button>
                             <a
-                                href={hashedlink}
+                                href={`/brain/${hashedlink}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2 hover:bg-gray-100 rounded-md"
+                                className="p-2 bg-gray-100 rounded-md shadow-sm"
                             >
                                 <Externallink />
                             </a>

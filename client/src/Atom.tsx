@@ -10,6 +10,10 @@ export const showShareAtom=atom({
     key:"showShareItem",
     default:false
 })
+export const hashedlinkAtom=atom({
+  key:"hashedlinkatom",
+  default:""
+})
 export const usernameAtom=atom({
     key:"usernameItem",
     default:""
