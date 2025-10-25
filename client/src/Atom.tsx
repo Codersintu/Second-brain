@@ -14,6 +14,10 @@ export const hashedlinkAtom=atom({
   key:"hashedlinkatom",
   default:""
 })
+export const showPreviewAtom=atom<string | null>({
+  key:"showPreviewAtom",
+  default:null
+})
 export const usernameAtom=atom({
     key:"usernameItem",
     default:""

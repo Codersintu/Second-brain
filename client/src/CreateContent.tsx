@@ -57,9 +57,9 @@ export default function CreateContent() {
   return (
 
     <div className="w-full h-screen flex justify-center items-center absolute z-20 bg-black/30 ">
-      <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, ease: "easeInOut" }} className=" w-full max-w-xl bg-white rounded-lg shadow-sm p-5">
+      <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5, ease: "easeInOut" }} className="relative w-full max-w-xl bg-white rounded-lg shadow-sm p-5">
         {/* Title */}
-        <div className="float-right cursor-pointer hover:bg-cyan-200 p-1 rounded-full" onClick={() => setshow(false)}><CrossIcon /></div>
+        <div className="w-8 h-8 absolute right-0 top-0 flex items-center justify-center cursor-pointer hover:bg-cyan-200 rounded-full" onClick={() => setshow(false)}><CrossIcon /></div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Type</label>

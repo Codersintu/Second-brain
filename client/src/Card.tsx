@@ -3,16 +3,17 @@ import { BACKEND_URL } from "./Config";
 import DeleteIcon from "./DeleteIcon"
 import ShareIcon from "./ShareIcon"
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { contentAtom, filterAtom, type ContentItem } from "./Atom";
+import { contentAtom, filterAtom, showPreviewAtom, type ContentItem } from "./Atom";
 import Linkicon from "./Linkicon";
 import DocumentIcon from "./DocumentIcon";
 import MemoryItem from "./MemoryItem";
 import { useEffect } from "react";
-
+import { motion } from "motion/react"
 function Card() {
   const content = useRecoilValue(contentAtom)
   const setContent = useSetRecoilState(contentAtom)
   const FilterContent = useRecoilValue(filterAtom)
+  const setshowPreview=useSetRecoilState(showPreviewAtom)
 
   // ✅ Background refresh on mount
   useEffect(() => {
@@ -57,7 +58,15 @@ function Card() {
       {content
         .filter((item) => !FilterContent || item.type === FilterContent)
         .map((item: ContentItem) => (
-          <div key={item._id} className="w-72 bg-white  rounded-xl border p-4 min-h-64">
+          <motion.div
+           initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0}}
+          viewport={{once:true,amount:0.2}}
+            transition={{
+              duration: 0.4,
+              ease: "easeInOut",
+            }}
+             key={item._id} className="w-72 bg-white  rounded-xl border p-4 min-h-64">
             <div className="p-0 flex flex-col gap-10">
               {/* Header */}
               <div className="flex justify-between items-center">
@@ -98,19 +107,19 @@ function Card() {
               }
 
               {/* Tags */}
-              <div className="flex gap-2 flex-wrap">
-                <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-lg text-xs">
-                  #productivity
-                </span>
-                <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-lg text-xs">
-                  #learning
-                </span>
-              </div>
+              {item.type==="Youtube" &&
+                <button onClick={()=>setshowPreview(item._id)} className="w-full flex justify-center shadow-md p-1 bg-gray-100 rounded-md border  hover:bg-gray-200">
+                  <div className="flex items-center gap-4">
+                  <img className="w-6" src="https://ik.imagekit.io/j3whydwtk/general/icons8-preview-40.png" alt="" />
+                  <p className="text-lg text-black font-serif">Preview</p>
+                  </div>
+                  </button>
+                }
 
               {/* Footer */}
               <p className="text-xs text-gray-400">Added on {new Date(item.createdAt).toLocaleDateString()}</p>
             </div>
-          </div>
+          </motion.div>
 
         ))}
     </>
