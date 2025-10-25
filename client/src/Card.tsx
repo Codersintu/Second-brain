@@ -13,7 +13,7 @@ function Card() {
   const content = useRecoilValue(contentAtom)
   const setContent = useSetRecoilState(contentAtom)
   const FilterContent = useRecoilValue(filterAtom)
-  const setshowPreview=useSetRecoilState(showPreviewAtom)
+  const setshowPreview = useSetRecoilState(showPreviewAtom)
 
   // ✅ Background refresh on mount
   useEffect(() => {
@@ -22,12 +22,12 @@ function Card() {
         const res = await axios.get(`${BACKEND_URL}/api/v1/content`, {
           headers: { Authorization: localStorage.getItem("token") || "" },
         });
-         const data = res.data.contentall || [];
-      const sorted = data.sort(
-        (a:ContentItem, b:ContentItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      setContent(sorted);
-      localStorage.setItem("cachedContent", JSON.stringify(sorted));
+        const data = res.data.contentall || [];
+        const sorted = data.sort(
+          (a: ContentItem, b: ContentItem) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setContent(sorted);
+        localStorage.setItem("cachedContent", JSON.stringify(sorted));
       } catch (error) {
         console.error("Background refresh failed:", error);
       }
@@ -59,14 +59,14 @@ function Card() {
         .filter((item) => !FilterContent || item.type === FilterContent)
         .map((item: ContentItem) => (
           <motion.div
-           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0}}
-          viewport={{once:true,amount:0.2}}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{
               duration: 0.4,
               ease: "easeInOut",
             }}
-             key={item._id} className="w-72 bg-white  rounded-xl border p-4 min-h-64">
+            key={item._id} className="w-72 bg-white  rounded-xl border p-4 min-h-64">
             <div className="p-0 flex flex-col gap-10">
               {/* Header */}
               <div className="flex justify-between items-center">
@@ -86,17 +86,17 @@ function Card() {
                 </div>
               </div>
 
-                  <MemoryItem item={item}/>
+              <MemoryItem item={item} />
 
               {/* twitter emded */}
               {item.type === "Twitter" &&
                 <blockquote className="twitter-tweet">
-                  <a href={item.link.replace("x.com", "twitter.com") }></a>
+                  <a href={item.link.replace("x.com", "twitter.com")}></a>
                 </blockquote>}
 
               {/* link uploading system */}
 
-             {item.type === "Link🔗" && <a
+              {item.type === "Link🔗" && <a
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -107,14 +107,14 @@ function Card() {
               }
 
               {/* Tags */}
-              {item.type==="Youtube" &&
-                <button onClick={()=>setshowPreview(item._id)} className="w-full flex justify-center shadow-md p-1 bg-gray-100 rounded-md border  hover:bg-gray-200">
+              {item.type === "Youtube" &&
+                <button onClick={() => setshowPreview(item._id)} className="w-full flex justify-center shadow-md p-1 bg-gray-100 rounded-md border  hover:bg-gray-200">
                   <div className="flex items-center gap-4">
-                  <img className="w-6" src="https://ik.imagekit.io/j3whydwtk/general/icons8-preview-40.png" alt="" />
-                  <p className="text-lg text-black font-serif">Preview</p>
+                    <img className="w-6" src="https://ik.imagekit.io/j3whydwtk/general/icons8-preview-40.png" alt="" />
+                    <p className="text-lg text-black font-serif">Preview</p>
                   </div>
-                  </button>
-                }
+                </button>
+              }
 
               {/* Footer */}
               <p className="text-xs text-gray-400">Added on {new Date(item.createdAt).toLocaleDateString()}</p>

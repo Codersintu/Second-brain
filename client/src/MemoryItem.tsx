@@ -47,8 +47,8 @@ function MemoryItem({ item }: any) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 ml-16 md:ml-0 flex items-center justify-center z-[9999]"
-             // click outside closes it
+            className="fixed inset-0 bg-black/30 ml-12 md:ml-0 flex items-center justify-center z-[9999]"
+          // click outside closes it
           >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}

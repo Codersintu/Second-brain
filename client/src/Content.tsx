@@ -7,34 +7,34 @@ import { filterAtom, showAtom, showShareAtom } from "./Atom"
 import DocumentItem from "./DocumentItem"
 
 function Content() {
-const setshow=useSetRecoilState(showAtom)
-const setshowShare=useSetRecoilState(showShareAtom)
-const filter=useRecoilValue(filterAtom)
+  const setshow = useSetRecoilState(showAtom)
+  const setshowShare = useSetRecoilState(showShareAtom)
+  const filter = useRecoilValue(filterAtom)
 
   return (
     <>
-    <div className="md:p-10 pt-2 flex-1 h-screen bg-cyan-50 font-serif gap-10 overflow-auto relative z-0 group">  
-     <div className="flex justify-between items-center">
-      <h1 className="md:text-2xl text-xl font-semibold">All Memory😍</h1>
-      <div className="flex gap-5 items-center">
-        <div onClick={()=>setshowShare(true)} className="flex items-center gap-2 bg-cyan-100 rounded-lg md:p-2 p-1 cursor-pointer">
-          <ShareIcon/>
-          <p className="text-blue-600 hidden md:block" >Share Brain</p>
-        </div>
-        {/* created own btn  */}
-        <button className="bg-blue-600 md:p-2 py-1  rounded-md text-white font-serif hover:bg-blue-500" onClick={()=>setshow(true)}>+ Add Content</button>
-        
-      </div>
-     </div>
+      <div className="md:p-10 pt-2 flex-1 h-screen bg-cyan-50 font-serif gap-10 overflow-auto relative z-0 group">
+        <div className="flex justify-between items-center">
+          <h1 className="md:text-2xl text-xl font-semibold">All Memory😍</h1>
+          <div className="flex gap-5 items-center">
+            <div onClick={() => setshowShare(true)} className="flex items-center gap-2 bg-cyan-100 rounded-lg md:p-2 p-1 cursor-pointer">
+              <ShareIcon />
+              <p className="text-blue-600 hidden md:block" >Share Brain</p>
+            </div>
+            {/* created own btn  */}
+            <button className="bg-blue-600 md:p-2 py-1  rounded-md text-white font-serif hover:bg-blue-500" onClick={() => setshow(true)}>+ Add Content</button>
 
-     <div className="mt-12 card grid grid-cols-4  gap-10">
-      <ErrorBoundary>
-        {filter === "Document📄" ? <DocumentItem/> :
-      <Card/>}
-      </ErrorBoundary>
-     </div>
-    </div>
-    
+          </div>
+        </div>
+
+        <div className="mt-12 card grid grid-cols-4  gap-10">
+          <ErrorBoundary>
+            {filter === "Document📄" ? <DocumentItem /> :
+              <Card />}
+          </ErrorBoundary>
+        </div>
+      </div>
+
     </>
   )
 }
